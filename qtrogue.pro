@@ -3,10 +3,17 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = 
+TARGET =
 DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += rwindow.h
-SOURCES += main.cpp rwindow.cpp
+HEADERS += \
+	rwindow.h \
+	perlinnoise.h \
+    fakecpp11.h
+
+SOURCES += \
+	main.cpp \
+	rwindow.cpp \
+	perlinnoise.cpp
