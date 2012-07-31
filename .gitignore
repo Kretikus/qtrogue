@@ -1,15 +1,6 @@
-lib-cov
-*.seed
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
+*.o
+moc_*.cpp
+*.bak
 
-pids
-logs
-results
+qtrogue.app
 
-node_modules
-npm-debug.log
