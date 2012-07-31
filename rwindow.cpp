@@ -1,4 +1,5 @@
 #include "rwindow.h"
+#include "perlinnoise.h"
 
 #include <QApplication>
 #include <QPainter>
@@ -9,7 +10,7 @@
 namespace {
 	const int maxYGlobal = 150;
 	const int maxXGlobal = 240;
-	
+
 	const int middleY = 75;
 	const int middleX = 120;
 
@@ -18,7 +19,7 @@ namespace {
 
 	const int charYSz = 12;
 	const int charXSz = 12;
-	
+
 	const QPoint middlePos(maxXWindow/2, maxYWindow/2);
 }
 
@@ -26,15 +27,38 @@ namespace {
 CurrentMap::CurrentMap()
 : offset_(80, 50)
 {
+	PerlinNoise pn;
 	data_.resize(maxYGlobal);
 	for(int i = 0; i < maxYGlobal; ++i) {
 		data_[i].resize(maxXGlobal);
-		for (int x = 0; x < maxXGlobal; ++x) {
-			if (x < middleX) data_[i][x] = i < middleY ? '0' : '1';
-			else data_[i][x] = i < middleY ? '2' : '3';
+		for (int j = 0; j < maxXGlobal; ++j) {
+//			if (x < middleX) data_[i][x] = i < middleY ? '0' : '1';
+//			else data_[i][x] = i < middleY ? '2' : '3';
+
+			double x = (double)j/((double) maxXGlobal);
+			double y = (double)i/((double) maxYGlobal);
+
+			double n = pn.noise(10 * x, 10 * y, 0.8);
+
+			// Watter (or a Lakes)
+			if(n < 0.35) {
+				data_[i][j] = '~';
+			}
+			// Floors (or Planes)
+			else if (n >= 0.35 && n < 0.6) {
+				data_[i][j] = '.';
+			}
+			// Walls (or Mountains)
+			else if (n >= 0.6 && n < 0.8) {
+				data_[i][j] = '#';
+			}
+			// Ice (or Snow)
+			else {
+				data_[i][j] = 'S';
+			}
 		}
 	}
-	
+
 	for(int i = 0; i < maxXGlobal; ++i) {
 		data_[0][i] = '|';
 		data_[maxYGlobal-1][i] = '|';
