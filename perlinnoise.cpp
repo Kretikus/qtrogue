@@ -3,6 +3,7 @@
 #include "fakecpp11.h"
 
 #include <math.h>
+#include <stdlib.h>
 
 namespace {
 

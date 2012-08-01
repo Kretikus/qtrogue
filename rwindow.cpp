@@ -7,6 +7,8 @@
 
 #include <QDebug>
 
+#include <time.h>
+
 namespace {
 	const int maxYGlobal = 150;
 	const int maxXGlobal = 240;
@@ -27,7 +29,13 @@ namespace {
 CurrentMap::CurrentMap()
 : offset_(80, 50)
 {
-	PerlinNoise pn(237);
+	struct tm epochTm = {0,0,0,1,1,1970,1,0};
+	time_t epoch = mktime(&epochTm);
+	time_t result = time(NULL);
+	const double seed = difftime(epoch, result);
+	qDebug() << seed;
+	PerlinNoise pn(seed); //237
+
 	data_.resize(maxYGlobal);
 	for(int i = 0; i < maxYGlobal; ++i) {
 		data_[i].resize(maxXGlobal);
@@ -135,12 +143,15 @@ void RWidget::paintEvent(QPaintEvent * /*event*/)
 	}
 
 	player_.draw(p);
+	//qDebug() << player_.pos_ << map_.getAt(player_.pos_-QPoint(1,1));
 }
 
 void RWidget::keyReleaseEvent(QKeyEvent *keyEvent)
 {
 	switch(keyEvent->key()) {
 		case Qt::Key_Left:
+			if(!isMoveValid(player_.pos_ + QPoint(-1,0))) return;
+
 			if (map_.offset_.x() && player_.pos_.x() <= middlePos.x()) {
 				map_.offset_ -= QPoint(1,0);
 			} else {
@@ -148,6 +159,8 @@ void RWidget::keyReleaseEvent(QKeyEvent *keyEvent)
 			}
 			break;
 		case Qt::Key_Right:
+			if(!isMoveValid(player_.pos_ + QPoint(1,0))) return;
+
 			if (map_.offset_.x() < maxXGlobal-maxXWindow && player_.pos_.x() >= middlePos.x()) {
 				map_.offset_ += QPoint(1,0);
 			} else {
@@ -155,6 +168,8 @@ void RWidget::keyReleaseEvent(QKeyEvent *keyEvent)
 			}
 			break;
 		case Qt::Key_Up:
+			if(!isMoveValid(player_.pos_ + QPoint(0,-1))) return;
+
 			if (map_.offset_.y() && player_.pos_.y() <= middlePos.y()) {
 				map_.offset_ -= QPoint(0,1);
 			} else {
@@ -162,6 +177,8 @@ void RWidget::keyReleaseEvent(QKeyEvent *keyEvent)
 			}
 			break;
 		case Qt::Key_Down:
+			if(!isMoveValid(player_.pos_ + QPoint(0,1))) return;
+
 			if (map_.offset_.y() < maxYGlobal-maxYWindow && player_.pos_.y() >= middlePos.y()) {
 				map_.offset_ += QPoint(0,1);
 			} else {
@@ -173,6 +190,11 @@ void RWidget::keyReleaseEvent(QKeyEvent *keyEvent)
 			break;
 	}
 	update();
+}
+
+bool RWidget::isMoveValid(const QPoint & p)
+{
+	return map_.getAt(p-QPoint(1,1)) == '.';
 }
 
 

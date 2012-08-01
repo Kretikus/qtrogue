@@ -38,6 +38,7 @@ public:
 protected:
 	void paintEvent(QPaintEvent * event);
 	void keyReleaseEvent(QKeyEvent *);
+	bool isMoveValid(const QPoint&);
 
 	Character player_;
 	CurrentMap map_;
