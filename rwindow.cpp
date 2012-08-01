@@ -2,6 +2,7 @@
 #include "perlinnoise.h"
 
 #include <QApplication>
+#include <QDateTime>
 #include <QPainter>
 #include <QKeyEvent>
 
@@ -29,11 +30,7 @@ namespace {
 CurrentMap::CurrentMap()
 : offset_(80, 50)
 {
-	struct tm epochTm = {0,0,0,1,1,1970,1,0};
-	time_t epoch = mktime(&epochTm);
-	time_t result = time(NULL);
-	const double seed = difftime(epoch, result);
-	qDebug() << seed;
+	const long seed = QDateTime::currentDateTime().toMSecsSinceEpoch() / 1000;
 	PerlinNoise pn(seed); //237
 
 	data_.resize(maxYGlobal);
