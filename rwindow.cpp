@@ -27,7 +27,7 @@ namespace {
 CurrentMap::CurrentMap()
 : offset_(80, 50)
 {
-	PerlinNoise pn;
+	PerlinNoise pn(237);
 	data_.resize(maxYGlobal);
 	for(int i = 0; i < maxYGlobal; ++i) {
 		data_[i].resize(maxXGlobal);
@@ -38,18 +38,18 @@ CurrentMap::CurrentMap()
 			double x = (double)j/((double) maxXGlobal);
 			double y = (double)i/((double) maxYGlobal);
 
-			double n = pn.noise(10 * x, 10 * y, 0.8);
+			double n = pn.noise(10 * x, 10 * y, 0.8) + 0.7;
 
 			// Watter (or a Lakes)
 			if(n < 0.35) {
 				data_[i][j] = '~';
 			}
 			// Floors (or Planes)
-			else if (n >= 0.35 && n < 0.6) {
+			else if (n >= 0.35 && n < 0.9) {
 				data_[i][j] = '.';
 			}
 			// Walls (or Mountains)
-			else if (n >= 0.6 && n < 0.8) {
+			else if (n >= 0.9 && n < 1.2) {
 				data_[i][j] = '#';
 			}
 			// Ice (or Snow)
