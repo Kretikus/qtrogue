@@ -22,11 +22,21 @@ class Character
 {
 public:
 	Character();
-	QChar getSymbol() const;
+	virtual QChar getSymbol() const;
 
 	void draw(QPainter& p) const;
 
 	QPoint pos_;
+};
+
+class Monster : public Character
+{
+public:
+	Monster() : Character() {}
+
+public:
+	void draw(QPainter& p, CurrentMap &map) const;
+	virtual QChar getSymbol() const;
 };
 
 class RWidget : public QWidget
@@ -42,4 +52,6 @@ protected:
 
 	Character player_;
 	CurrentMap map_;
+	QString currentText_;
+	QVector<Monster> monsters_;
 };
