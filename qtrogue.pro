@@ -11,9 +11,11 @@ INCLUDEPATH += .
 HEADERS += \
 	rwindow.h \
 	perlinnoise.h \
-    fakecpp11.h
+    fakecpp11.h \
+    currentmap.h
 
 SOURCES += \
 	main.cpp \
 	rwindow.cpp \
-	perlinnoise.cpp
+	perlinnoise.cpp \
+    currentmap.cpp
